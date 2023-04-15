@@ -29,7 +29,7 @@ async def welcome(request):
     #     "X-RapidAPI-Key": config["RAPID_API_KEY"],
     #     "X-RapidAPI-Host": "mobile-phone-specs-database.p.rapidapi.com"
     # }
-    url = "https://api.device-specs.io/api/smartphones?populate=*?page=2"
+    url = "https://api.device-specs.io/api/smartphones?pagination[page]=2&pagination[pageSize]=35&populate=*"
     headers = {
         "Authorization": f"Bearer {config['DEVICE_SPECS_API_TOKEN']}"
     }
