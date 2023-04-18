@@ -6,7 +6,7 @@ import requests, asyncio, aiohttp
 import motor.motor_asyncio, pymongo
 
 
-config_file = open("config.json")
+config_file = open("innovatech/config.json")
 config = json.load(config_file)
 
 
@@ -14,6 +14,9 @@ app = Sanic(name="InnovaTech")
 db_url = f"mongodb+srv://{config['MONGODB_USERNAME']}:{config['MONGODB_PASSWORD']}@cluster0.jd36ygh.mongodb.net/?retryWrites=true&w=majority"
 db_client = motor.motor_asyncio.AsyncIOMotorClient(db_url)
 db = db_client["Smartphones"]
+
+
+welcome_html_page = open("innovatech/welcome.html", "r")
 
 
 async def fetch(session, url, headers):
@@ -72,8 +75,22 @@ async def welcome(request):
     #         for jsonobj in file_data:
     #             await db.get_collection("Smartphones").insert_one(jsonobj, session=s)
     #     return text("Success")
+
+    test_questions = {
+        "What is your budget?": [">10,000", "10,000-15,000", "15,000-20,000", "20,000-30,000", "30,000-40,000"],
+        "What is your age group?": ["13-18", "18-30", "30-60", "60+"],
+        "What is your screentime?": ["<1hr", "1-2hrs", "2-6hrs", "6+hrs"],
+        "Do you care about how your phone looks?": ["Yes", "No"],
+        "How many photos do you click in a day?": ["Not everyday", "1-2", "2-10", "10+"],
+        "Which screen size do you prefer?": ["<5.5inches", "5-6inches", "6+inches"],
+        "How much storage is sufficient according to you?": ["32GB", "64GB", "128GB", "256GB"],
+        "What are your basic needs?": ["Messaging and Calls", "Gaming", "Photography"],
+        "How much RAM is sufficient according to your needs?": ["2GB", "4GB", "6GB", "6GB+"]
+    }
+
     
-    return text("Under Development")
+    return html(str(welcome_html_page.read()))
+
 
 if __name__ == '__main__':
     app.run(host="localhost", port=6969)
