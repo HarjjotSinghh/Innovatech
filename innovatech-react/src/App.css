@@ -1,0 +1,163 @@
+.App {
+  text-align: center;
+}
+
+.App-logo {
+  height: 40vmin;
+  pointer-events: none;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  .App-logo {
+    animation: App-logo-spin infinite 20s linear;
+  }
+}
+
+.App-header {
+  background-color: #282c34;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-size: calc(10px + 2vmin);
+  color: white;
+}
+
+.App-link {
+  color: #61dafb;
+}
+
+@keyframes App-logo-spin {
+  from {
+    transform: rotate(0deg);
+  }
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+.prevent-select {
+  -webkit-user-select: none; /* Safari */
+  -ms-user-select: none; /* IE 10 and IE 11 */
+  user-select: none; /* Standard syntax */
+}
+
+h2 {
+  font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+  color: black;
+  font-size: 48px;
+  font-family: 'Poppins', sans-serif;
+  cursor: default;
+
+}
+
+.main {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+}
+
+.mobihunt {
+  color: blueviolet;
+}
+
+.button_ {
+  margin-top: -40px;
+  background-color: initial;
+  background-image: linear-gradient(#8a2be2 0, #5f04b9 100%);
+  border-radius: 40px;
+  border-style: none;
+  box-shadow: rgba(245, 244, 247, .25) 0 1px 1px inset;
+  color: #fff;
+  cursor: pointer;
+  display: inline-block;
+  font-size: 20px;
+  font-weight: 520;
+  height: 60px;
+  line-height: 60px;
+  margin-left: -4px;
+  font-family: 'Poppins', sans-serif;
+  outline: 0;
+  text-align: center;
+  transition: all .3s cubic-bezier(.05, .03, .35, 1);
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+  vertical-align: bottom;
+  width: 190px;
+}
+
+.button_:hover {
+  opacity: .85;
+}
+
+@media screen and (max-width: 1000px) {
+  .button_ {
+    font-size: 14px;
+    height: 55px;
+    line-height: 55px;
+    width: 150px;
+  }
+}
+
+.wave {
+  position: fixed;
+  bottom: 100%;
+  animation-name: waveAnimation;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.wave2 {
+  transform: rotate(180deg);
+  position: fixed;
+  bottom: 100%;
+  animation-name: waveAnimation2;
+  animation-duration: 2s;
+  animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+@keyframes waveAnimation {
+  0% {
+    bottom: -100%
+  }
+  100% {
+    bottom: 150%;
+  }
+}
+
+@keyframes waveAnimation2 {
+  0% {
+    bottom: -150%
+  }
+  100% {
+    bottom: 100%;
+  }
+}
+
+.questionsContainer {
+  width: 800px;
+  height: 300px;
+  background-color: #ebebeb;
+  border-radius: 60px;
+  margin-top: -30px;
+  text-align: left;
+  position: relative;
+  /* display: none; */
+}
+
+.question {
+  width: (initial + 50px);
+  margin-left: 60px;
+  margin-bottom: 80px;
+  font-family: 'Poppins', sans-serif;
+  font-size: 20px;
+  background-color: rgb(201, 201, 201); 
+  border-radius: 40px;
+  vertical-align: bottom;
+  position: absolute;
+  bottom: 0;
+}
