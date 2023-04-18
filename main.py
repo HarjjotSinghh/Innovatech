@@ -13,7 +13,7 @@ config = json.load(config_file)
 app = Sanic(name="InnovaTech")
 db_url = f"mongodb+srv://{config['MONGODB_USERNAME']}:{config['MONGODB_PASSWORD']}@cluster0.jd36ygh.mongodb.net/?retryWrites=true&w=majority"
 db_client = motor.motor_asyncio.AsyncIOMotorClient(db_url)
-db = db_client["Smartphones"]["Smartphones"]
+db = db_client["Smartphones"]
 
 
 async def fetch(session, url, headers):
@@ -29,6 +29,11 @@ async def get_url(url, headers):
 
 @app.get("/")
 async def welcome(request):
+
+    """
+    Extracted database into JSON file from the API DeviceSpecs
+    """
+
     # data : dict = {}
     # url = "https://mobile-phone-specs-database.p.rapidapi.com/gsm/get-models-by-brandname/Samsung"
     # headers = {
@@ -46,15 +51,29 @@ async def welcome(request):
     #     response = json.loads(response)
     #     with open("smartphones_data.json", "a") as f:
     #         json.dump(response, f, indent=4)
+    # data.update(response)
 
-        # data.update(response)
+    """
+    Inserted data to the database
+    """
 
-    with open("smartphones_data.json") as f:
-        file_data = json.load(f)
-        await db.insert_one(file_data)
+    # with open("smartphones_data.json", "r") as f:
+    #     data = json.load(f)
+    # merged_data : dict = {}
+    # for jsonobj in data:
+    #     merged_data.update(jsonobj)
+    # with open("smartphones_data2.json", "w") as f:
+    #     json.dump(modified_data, f, indent=4)
+    # return text("Success")
 
-    return text("Success")
-
+    # with open("smartphones_data.json") as f:
+    #     file_data = json.load(f)
+    #     async with await db_client.start_session() as s:
+    #         for jsonobj in file_data:
+    #             await db.get_collection("Smartphones").insert_one(jsonobj, session=s)
+    #     return text("Success")
+    
+    return text("Under Development")
 
 if __name__ == '__main__':
     app.run(host="localhost", port=6969)
