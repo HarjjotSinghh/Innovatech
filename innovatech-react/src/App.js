@@ -1,6 +1,10 @@
 import wave from './static/images/wave.png';
 import './App.css';
 import { React, useState, useEffect } from 'react';
+// import catalog from 'gsmarena-api';
+
+// const brands = await catalog.getBrands();
+
 
 var test_questions = new Object();
 var test_questions = {
@@ -35,6 +39,7 @@ function App() {
 
   return (
     <>
+    {/* <div>{brands}</div> */}
     <img class="wave" src={wave} alt="" width="100%" height="100%"></img>
     <img class="wave2" src={wave} alt="" width="100%" height="100%"></img>
     {showElement ? (

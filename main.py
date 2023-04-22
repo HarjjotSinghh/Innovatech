@@ -8,7 +8,7 @@ from flask import Flask, render_template
 import pprint
 from amazon_paapi import AmazonApi
 from bs4 import BeautifulSoup
-
+import os
 
 
 config_file = open("innovatech/config.json")
@@ -24,11 +24,12 @@ db_client = motor.motor_asyncio.AsyncIOMotorClient(db_url)
 db = db_client["Smartphones"]
 
 
+
 amazon = AmazonApi(config["AMAZON_API_ACCESS_KEY"], config["AMAZON_API_SECRET_ACCESS_KEY"], country='IN', tag="harjjotsinghh-21")
 
 # welcome_html_page = open("innovatech/welcome.html", "r")
 
-test_questions = {
+test_questions = {  
         "What is your budget?": [">10,000", "10,000-15,000", "15,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000-1,00,000"],
         "What is your age group?": ["13-18", "18-30", "30-60", "60+"],
         "What is your screentime?": ["<4hrs", "4-6hrs", "6-8hrs", "8-10hrs", "10+hrs"],
@@ -59,6 +60,8 @@ async def get_data(length = None):
 
 @app.get("/")
 async def welcome():
+
+    smartphones_names : list = json.load(open("./innovatech/smartphones_names.json", "r"))
 
     """
     Extracted database into JSON file from the API DeviceSpecs
@@ -137,25 +140,81 @@ async def welcome():
     # with open("./innovatech/smartphones_names.json", "w") as f:
     #     json.dump(smartphones_names, f, indent=4)
 
-    smartphones_names : list = json.load(open("./innovatech/smartphones_names.json", "r"))
-    battery_sizes = []
+    
+    # battery_sizes = []
 
-    for name in smartphones_names[0:20]:
-        url = f"https://www.gsmarena.com/{name.lower().replace(' ', '_')}-reviews.php3"
+    # for name in smartphones_names[0:20]:
+    #     url = f"https://www.gsmarena.com/{name.lower().replace(' ', '_')}-reviews.php3"
 
-        response = await get_url(url)
-        soup = BeautifulSoup(response, 'html.parser')
-        try:
-            battery_elem = soup.find('td', string='Battery').find_next_sibling('td')
-            battery_text = battery_elem.get_text(strip=True)
+    #     response = await get_url(url)
+    #     soup = BeautifulSoup(response, 'html.parser')
+    #     try:
+    #         battery_elem = soup.find('td', string='Battery').find_next_sibling('td')
+    #         battery_text = battery_elem.get_text(strip=True)
 
-            battery_size = int(battery_text.split()[0])
-            battery_sizes.append(battery_size)
-        except:
-            battery_sizes.append(None)
+    #         battery_size = int(battery_text.split()[0])
+    #         battery_sizes.append(battery_size)
+    #     except:
+    #         battery_sizes.append(None)
+
+    # data = await get_url(url="https://api-mobilespecs.azharimm.dev/v2/apple_iphone_12_pro_max-10237", headers=None)
+
+    data = []
+
+    """
+    Trying to scrape data from gsmarena
+    """
+
+    # for name in smartphones_names[0:10]:
+
+    #     name_url = name.replace(' ', '-')
+    #     url = f'https://www.gsmarena.com/res.php3?sSearch={name_url}&idMaker=0'
+    #     response = requests.get(url)
+    #     soup = BeautifulSoup(response.content, 'html.parser')
+    #     search_result = soup.find('div', class_='makers').find('a')
+
+    #     if search_result:
+    #         link = 'https://www.gsmarena.com/' + search_result['href']
+    #         data.append(f'{name}: {link}')
+    #     else:
+    #         data.append(f'{name}: Not found')
+
+    """
+    Removed discontinued phones from database
+    """
+
+    # path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
+    # dir_list = sorted(os.listdir(path))
+    # files_to_be_removed = []
+    # data_ = {}
+    # for file in dir_list:
+    #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
+    #         data_ = json.load(f)
+    #         data.append(data_)
+    #         # print(data_["launch_status"])
+    #         if not "available" in data_["launch_status"].lower():
+    #             files_to_be_removed.append(file)
+                
+    # for file in files_to_be_removed:
+    #     os.remove(f"{path}\{file}")
+    #     print(f"Removed {file}")
+
+    """
+    Entering finalised data into mongoDB
+    """
+
+    path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
+    dir_list = sorted(os.listdir(path))
+
+    for file in dir_list:
+        with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
+            file_data = json.load(f)
+            async with await db_client.start_session() as s:
+                await db.get_collection("Smartphones").insert_one(file_data, session=s)
+            data.append(file)
 
 
-    return render_template("welcome.html", data=battery_sizes)
+    return render_template("welcome.html", data=data)
 
 
 if __name__ == '__main__':  
