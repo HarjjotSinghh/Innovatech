@@ -9,6 +9,11 @@ import pprint
 from amazon_paapi import AmazonApi
 from bs4 import BeautifulSoup
 import os
+import pandas as pd
+from sklearn.tree import DecisionTreeClassifier
+from sklearn.model_selection import train_test_split
+from sklearn.metrics import accuracy_score
+import re
 
 
 config_file = open("innovatech/config.json")
@@ -17,12 +22,15 @@ config = json.load(config_file)
 
 app = Flask(__name__)
 app.config["TEMPLATES_AUTO_RELOAD"] = True
+app.config['SERVER_NAME'] = 'localhost:6969'
+app.config['APPLICATION_ROOT'] = '/'
+app.config['PREFERRED_URL_SCHEME'] = 'http'
+app.app_context().push()
 
 
 db_url = f"mongodb+srv://{config['MONGODB_USERNAME']}:{config['MONGODB_PASSWORD']}@cluster0.jd36ygh.mongodb.net/?retryWrites=true&w=majority"
 db_client = motor.motor_asyncio.AsyncIOMotorClient(db_url)
 db = db_client["Smartphones"]
-
 
 
 amazon = AmazonApi(config["AMAZON_API_ACCESS_KEY"], config["AMAZON_API_SECRET_ACCESS_KEY"], country='IN', tag="harjjotsinghh-21")
@@ -31,17 +39,208 @@ amazon = AmazonApi(config["AMAZON_API_ACCESS_KEY"], config["AMAZON_API_SECRET_AC
 
 fake_space = chr(0x00002800)
 test_questions = {  
-        "What is your budget?": [">10,000", "10,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000-1,00,000"],
+        "What is your budget?": [">10,000", "10,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000+"],
         "What is your age group?": ["13-18", "18-30", "30-60", "60+"],
-        "What is your screentime?": ["<4hrs", "4-6hrs", "6-8hrs", "8-10hrs", "10+hrs"],
+        "What is your screentime?": ["<4hrs", "4-8hrs", "8-12hrs", "12+hrs"],
         "Do you care about how your phone looks?": ["Yes", "No"],
         "How often do use your phone's camera?": [f"Not{fake_space}that{fake_space}much", "Sometimes", "Frequently", f"All{fake_space}the{fake_space}time"],
-        "What screen size do you prefer?": ["<5.5inches", "5-6inches", "6+inches"],
-        "How much storage is sufficient for you?": ["64GB", "128GB", "256GB", "512GB+"],
+        "What screen size do you prefer?": ["<6inches", "6-6.4inches", "6.4+inches"],
+        "How much storage is sufficient for you?": ["32GB", "64GB", "128GB", "256GB", "512GB+"],
         "What do you typically do on your smartphone on daily basis?": [f"Messaging{fake_space}and{fake_space}Calling", "Gaming", "Photography", "Videography"],
-        "How much RAM is sufficient according to your needs?": ["4GB", "6GB", "8GB+"]
+        "How much RAM is sufficient according to your needs?": ["2GB", "4GB", "6GB", "8GB+"]
     }
 user_data = {}
+
+
+async def get_smartphone_recommendation(user_data : dict):
+
+    # df = pd.DataFrame(data)
+
+    # features = df[["battery", "display_size", "main_camera", "internal_memory"]]
+    # target = df["modelname"]
+    # features_train, features_test, target_train, target_test = train_test_split(features, target, test_size=0.2)
+
+    # clf = DecisionTreeClassifier()
+    # clf.fit(features_train, target_train)
+    # accuracy = clf.score(features_test, target_test)
+    # prediction = clf.predict([[
+    #     battery,
+    #     user_data["What screen size do you prefer?"],
+    #     main_camera,
+    #     user_data["How much RAM is sufficient according to your needs?"],
+    # ]])
+
+
+    # required_properties = [
+    #     "battery",
+    #     "body_build",
+    #     "colors", 
+    #     "display_size", 
+    #     "main_camera", 
+    #     "internal_memory", 
+    #     "modelname",
+    #     "price",
+    #     "gpu",
+    #     "cpu"
+    # ]
+    # battery = ""
+    # requirements = {
+    #     "battery",
+    #     "body_build",
+    #     "colors", 
+    #     "display_size", 
+    #     "main_camera", 
+    #     "internal_memory", 
+    #     "modelname",
+    #     "price",
+    #     "gpu",
+    #     "cpu"
+    # }
+
+    smartphone_recommendations = []
+
+    battery_gt = 0
+    battery_lt = 0
+    main_camera_gt = 0
+    main_camera_lt = 0
+    price_gt = 0
+    price_lt = 0
+    display_size_gt = 0
+    display_size_lt = 0
+    rom_gt = 0
+    rom_lt = 0
+    ram_gt = 0
+    ram_lt = 0
+
+    if list(user_data.values())[0] == "<10,000":
+        price_gt = 0
+        price_lt = 10000
+    elif list(user_data.values())[0] == "10,000-20,000":
+        price_gt = 0
+        price_lt = 20000
+    elif list(user_data.values())[0] == "20,000-30,000":
+        price_gt = 0
+        price_lt = 30000
+    elif list(user_data.values())[0] == "30,000-40,000":
+        price_gt = 0
+        price_lt = 40000
+    elif list(user_data.values())[0] == "40,000-70,000":
+        price_gt = 0
+        price_lt = 70000
+    elif list(user_data.values())[0] == "70,000+":
+        price_gt = 0
+        price_lt = 700000
+
+    if list(user_data.values())[2] == "<4hrs":
+        battery_gt = 2000
+        battery_lt = 5000
+    elif list(user_data.values())[2] == "4-8hrs":
+        battery_gt = 2000
+        battery_lt = 5500
+    elif list(user_data.values())[2] == "8-12hrs":
+        battery_gt = 3000
+        battery_lt = 6000
+    elif list(user_data.values())[2] == "12+hrs":
+        battery_gt = 4000
+        battery_lt = 10000
+
+    if list(user_data.values())[4] == f"Not{fake_space}that{fake_space}much":
+        main_camera_gt = 2
+        main_camera_lt = 33
+    elif list(user_data.values())[4] == "Sometimes":
+        main_camera_gt = 5
+        main_camera_lt = 65
+    elif list(user_data.values())[4] == "Frequently":
+        main_camera_gt = 10
+        main_camera_lt = 111
+    elif list(user_data.values())[4] == f"All{fake_space}the{fake_space}time":
+        main_camera_gt = 40
+        main_camera_lt = 200
+    
+    if list(user_data.values())[5] == "<6inches":
+        display_size_gt = 0.0
+        display_size_lt = 6.0
+    elif list(user_data.values())[5] == "6-6.4inches":
+        display_size_gt = 6.0
+        display_size_lt = 6.4
+    elif list(user_data.values())[5] == "6.4+inches":
+        display_size_gt = 6.4
+        display_size_lt = 20.0
+    
+
+    if list(user_data.values())[6] == "64GB":
+        rom_gt = 64
+        rom_lt = 64
+    elif list(user_data.values())[6] == "32GB":
+        rom_gt = 32
+        rom_lt = 32
+    elif list(user_data.values())[6] == "128GB":
+        rom_gt = 128
+        rom_lt = 128
+    elif list(user_data.values())[6] == "256GB":
+        rom_gt = 256
+        rom_lt = 256
+    elif list(user_data.values())[6] == "512GB+":
+        rom_gt = 512
+        rom_lt = 4000
+    
+    if list(user_data.values())[8] == "4GB":
+        ram_gt = 4
+        ram_lt = 4
+    elif list(user_data.values())[8] == "6GB":
+        ram_gt = 6
+        ram_lt = 6
+    elif list(user_data.values())[8] == "2GB":
+        ram_gt = 2
+        ram_lt = 2
+    elif list(user_data.values())[8] == "8GB+":
+        ram_gt = 8
+        ram_lt = 50
+
+    # print(ram_gt, ram_lt, rom_gt, rom_lt)
+    
+    # my_function = """
+    #     function() {
+    #         for (var i = 0; i < this.internall_memory.length; i++) {
+    #             var obj = this.internall_memory[i];
+    #             if (obj.Storage == {rom} && obj.RAM == {ram}) {
+    #                 return true;
+    #             }
+    #         }
+    #         return false;
+    #     }
+    # """.format(rom=rom_gt, ram=ram_gt)
+
+    filter = {
+        "battery": {"$gt": battery_gt, "$lt": battery_lt},
+        "price": {"$gt": price_gt, "$lt": price_lt},
+        "main_camera": {"$gt": main_camera_gt, "$lt": main_camera_lt},
+        "display_size": {"$gt": display_size_gt, "$lt": display_size_lt},
+        # "internall_memory": { "$elemMatch": { 
+        #                                     "Storage": {"$gt": rom_gt, "$lt": rom_lt},
+        #                                     "RAM": {"$gt": ram_gt, "$lt": rom_lt} 
+        #                                     }
+        #                     }
+        # "internall_memory": { 
+        #                         "Storage": {"$gt": rom_gt, "$lt": rom_lt},
+        #                         "RAM": {"$gt": ram_gt, "$lt": rom_lt} 
+        #                     }
+    }
+
+    required_data = await (db["Smartphones"].find(filter)).to_list(length=None)
+    best_smartphones = []
+
+    for i in required_data:
+        for j in i["internall_memory"]:
+            if j["Storage"] <= rom_lt and j["Storage"] >= rom_gt and j["RAM"] <= ram_lt and j["RAM"] >= ram_gt:
+                best_smartphones.append(i)
+    
+    print([x["modelname"] for x in best_smartphones])
+
+    smartphone_recommendations = best_smartphones
+    
+    
+    return smartphone_recommendations
 
 
 async def fetch(session, url, headers = None):
@@ -159,7 +358,7 @@ async def welcome():
 
     # data = await get_url(url="https://api-mobilespecs.azharimm.dev/v2/apple_iphone_12_pro_max-10237", headers=None)
 
-    data = []
+    # data = []
 
     """
     Trying to scrape data from gsmarena
@@ -205,27 +404,101 @@ async def welcome():
 
     # path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
     # dir_list = sorted(os.listdir(path))
+    # # files_to_be_removed = []
 
     # for file in dir_list:
     #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
+
     #         file_data = json.load(f)
-    #         async with await db_client.start_session() as s:
-    #             await db.get_collection("Smartphones").insert_one(file_data, session=s)
+            # main_camera = file_data["main_camera"]
+            # match1 = re.search(r'(\d+)\s*MP', main_camera)
+            # display_size = file_data["display_size"]
+            # match2 = re.search(r'(\d+(\.\d+)?)', display_size)
+
+            # if match2:
+            #     number1 = float(match2.group(1))
+            #     file_data["display_size"] = number1
+            #     print(number1)
+            #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
+            #         json.dump(file_data, f_, indent=4)
+            #         print(file)
+            # else:
+            #     print("No match", file)
+
+            # async with await db_client.start_session() as s:
+            #     await db.get_collection("Smartphones").insert_one(file_data, session=s)
+            #     print(f"Inserted {file}")                 
+           
+            # try:
+            #     if isinstance(file_data["price"], int) and file_data["price"] > 100000:
+            #         file_data["price"] = int(file_data["price"]) / 100
+            #     elif isinstance(file_data["price"], str):
+            #         if file_data["price"].isnumeric():
+            #             if int(file_data["price"]) > 100000:
+            #                 file_data["price"] = int(file_data["price"]) / 100
+            #         else:
+            #             print(file)
+            # except ValueError:
+            #     continue
+
+            # with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
+            #         json.dump(file_data, f_, indent=4)
+            #         print(file)
+            
+            # internal_memory = file_data["internal_memory"]
+            # internal_memory_list = []
+            # for substring in internal_memory.split(", "):
+            #     substring = substring.strip()
+            #     storage, ram = substring.split(" ")[0:2]
+            #     storage = int(storage[:-2])
+            #     ram = int(ram[:-2])
+            #     internal_memory_list.append({"Storage": storage, "RAM": ram})
+            # file_data["internall_memory"] = internal_memory_list
+            # with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
+            #     json.dump(file_data, f_, indent=4)
+
     #         data.append(file)
+    #         if "$" in file_data["price"]:
+    #             match = re.search(r'\d+\.\d+', file_data["price"])
+    #             if match:
+    #                 price = match.group()
+    #                 file_data["price"] = str(int(float(price) * 82))
+    #                 print(price)
+    #                 with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
+    #                     json.dump(file_data, f_)
+    #             if not match:
+    #                 print(file)
+    #                 files_to_be_removed.append(file)
 
-
-    return render_template("welcome.html", data=data, questions=test_questions)
+    #         elif "about" and not "inr" in file_data["price"].lower():
+    #             match = re.search(r'\d+', file_data["price"])
+    #             if match:
+    #                 price = match.group()
+    #                 file_data["price"] = str(int(float(price) * 91))
+    #                 print(price)
+    #                 with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
+    #                     json.dump(file_data, f_)
+    #             if not match:
+    #                 print(file)
+    #                 files_to_be_removed.append(file)            
+    
+    # for file in files_to_be_removed:
+    #     os.remove(f"{path}\{file}")
+    #     print(f"Removed {file}")
+    with app.app_context():
+        return render_template("welcome.html", questions=test_questions)
 
 @app.route('/get_user_data', methods=['POST'])
 async def get_user_data():
     global user_data
-    user_data = request.form['javascript_data']
+    user_data = json.loads(request.form['javascript_data'])
     return user_data
 
 @app.route("/result")
 async def result():
-    await asyncio.sleep(0.2)
-    return render_template("result.html", user_data=user_data)
+    await asyncio.sleep(0.3)
+    data = await get_smartphone_recommendation(user_data)
+    return render_template("result.html", user_data=user_data, data=data)
 
 @app.route("/tech_news")
 async def tech_news():
