@@ -227,6 +227,10 @@ async def result():
     await asyncio.sleep(0.2)
     return render_template("result.html", user_data=user_data)
 
+@app.route("/tech_news")
+async def tech_news():
+    return render_template("Tech News.html")
+
 
 if __name__ == '__main__':
     
