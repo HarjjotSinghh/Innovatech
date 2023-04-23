@@ -4,7 +4,7 @@ from sanic.response import text, html, json
 import json
 import requests, asyncio, aiohttp
 import motor.motor_asyncio, pymongo
-from flask import Flask, render_template
+from flask import Flask, render_template, request
 import pprint
 from amazon_paapi import AmazonApi
 from bs4 import BeautifulSoup
@@ -29,17 +29,19 @@ amazon = AmazonApi(config["AMAZON_API_ACCESS_KEY"], config["AMAZON_API_SECRET_AC
 
 # welcome_html_page = open("innovatech/welcome.html", "r")
 
+fake_space = chr(0x00002800)
 test_questions = {  
-        "What is your budget?": [">10,000", "10,000-15,000", "15,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000-1,00,000"],
+        "What is your budget?": [">10,000", "10,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000-1,00,000"],
         "What is your age group?": ["13-18", "18-30", "30-60", "60+"],
         "What is your screentime?": ["<4hrs", "4-6hrs", "6-8hrs", "8-10hrs", "10+hrs"],
         "Do you care about how your phone looks?": ["Yes", "No"],
-        "How often do use your phone's camera?": ["Not that much", "Sometimes", "Frequently", "All the time"],
+        "How often do use your phone's camera?": [f"Not{fake_space}that{fake_space}much", "Sometimes", "Frequently", f"All{fake_space}the{fake_space}time"],
         "What screen size do you prefer?": ["<5.5inches", "5-6inches", "6+inches"],
         "How much storage is sufficient for you?": ["64GB", "128GB", "256GB", "512GB+"],
-        "What do you typically do on your smartphone on daily basis?": ["Messaging and Calling", "Gaming", "Photography", "Videography"],
+        "What do you typically do on your smartphone on daily basis?": [f"Messaging{fake_space}and{fake_space}Calling", "Gaming", "Photography", "Videography"],
         "How much RAM is sufficient according to your needs?": ["4GB", "6GB", "8GB+"]
     }
+user_data = {}
 
 
 async def fetch(session, url, headers = None):
@@ -60,8 +62,6 @@ async def get_data(length = None):
 
 @app.get("/")
 async def welcome():
-
-    smartphones_names : list = json.load(open("./innovatech/smartphones_names.json", "r"))
 
     """
     Extracted database into JSON file from the API DeviceSpecs
@@ -203,21 +203,32 @@ async def welcome():
     Entering finalised data into mongoDB
     """
 
-    path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
-    dir_list = sorted(os.listdir(path))
+    # path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
+    # dir_list = sorted(os.listdir(path))
 
-    for file in dir_list:
-        with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
-            file_data = json.load(f)
-            async with await db_client.start_session() as s:
-                await db.get_collection("Smartphones").insert_one(file_data, session=s)
-            data.append(file)
-
-
-    return render_template("welcome.html", data=data)
+    # for file in dir_list:
+    #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
+    #         file_data = json.load(f)
+    #         async with await db_client.start_session() as s:
+    #             await db.get_collection("Smartphones").insert_one(file_data, session=s)
+    #         data.append(file)
 
 
-if __name__ == '__main__':  
+    return render_template("welcome.html", data=data, questions=test_questions)
+
+@app.route('/get_user_data', methods=['POST'])
+async def get_user_data():
+    global user_data
+    user_data = request.form['javascript_data']
+    return user_data
+
+@app.route("/result")
+async def result():
+    await asyncio.sleep(0.2)
+    return render_template("result.html", user_data=user_data)
+
+
+if __name__ == '__main__':
     
     app.run(host="localhost", port=6969)
     loop = asyncio.get_event_loop()

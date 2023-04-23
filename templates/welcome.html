@@ -3,10 +3,34 @@
   <head>
     <meta charset="utf-8">
     <title>Tech Spot</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='welcome.css') }}">
+    <script type="module" src="{{url_for('static', filename='welcome.js')}}"></script>
+    <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
   </head>
   <body>
     <div class="main">
-      {{data}}
+      <div class="questionsContainer">
+        {% for k,v in questions.items() %}
+          <div id = {{k.replace(' ', '_')}} class="questionDivs">
+            <span class="question"> {{ k }} </span>
+            <br>
+            <br>
+            {% for option in v %}
+              <label class="rad-label" for="{{option}}">
+                <input class="rad-input" type="radio" id={{option.replace(' ', '-')}} name = {{v.__str__()}} value="{{option}}">
+                <div class="rad-design"></div> 
+                <div class="rad-text">{{option}}</div>
+              </label>
+            {% endfor %}
+            <br>
+            <br>
+          </div>
+        {% endfor %}
+        <div>
+          <button class="nextQuestion" id = "nextQuestion">Next Question</button>
+        </div>
+      </div>
+      
     </div>
   </body>
 </html>

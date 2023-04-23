@@ -1,0 +1,123 @@
+body {
+    background-color: rgb(44, 44, 44);
+}
+
+.questionsContainer {
+    padding: 20px;
+    font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: rgb(240, 240, 240);
+}
+
+.question {
+    padding-bottom: 30px;
+    font-size: 26px;
+    font-weight: 900;
+    margin-bottom: 20px;
+}
+
+.nextQuestion {
+  background-image: linear-gradient(270deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+  border-radius: 100px;
+  border-style: none;
+  box-sizing: border-box;
+  color: #f8f8f8;
+  cursor: pointer;
+  flex-shrink: 0;
+  font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+  font-size: 18px;
+  font-weight: 500;
+  height: 4rem;
+  padding: 0 1.6rem;
+  text-align: center;
+  text-shadow: rgba(0, 0, 0, 0.25) 0 3px 8px;
+  transition: all .5s;
+  user-select: none;
+  -webkit-user-select: none;
+  touch-action: manipulation;
+}
+
+.nextQuestion:hover {
+  box-shadow: rgba(80, 63, 205, 0.5) 0 2px 40px;
+  transition-duration: .2s;
+}
+
+.nextQuestion:disabled, .nextQuestion[disabled] {
+    opacity: 50%;
+}
+
+@media (min-width: 768px) {
+  .nextQuestion {
+    padding: 0 2.6rem;
+  }
+}
+
+.rad-label {
+    margin-top: 50px;
+    display: flex;
+    align-items: center;
+    border-radius: 100px;
+    padding: 16px 16px;
+    margin: 10px 0;
+    cursor: pointer;
+    transition: .3s;
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+}
+
+.rad-label:hover,
+.rad-label:focus-within {
+    background: hsla(0, 0%, 80%, .14);
+    background-repeat: no-repeat;
+    background-size: 50% 100%;
+}
+
+.rad-input {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    opacity: 0;
+    z-index: -1;
+}
+
+.rad-design {
+    width: 22px;
+    height: 22px;
+    border-radius: 100px;
+    background: linear-gradient(270deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+    position: relative;
+}
+
+.rad-design:hover {
+    box-shadow: rgba(80, 63, 205, 0.8) 0 1px 20px;
+    transition-duration: .4s;
+  }
+
+.rad-design::before {
+    content: '';
+
+    display: inline-block;
+    width: inherit;
+    height: inherit;
+    border-radius: inherit;
+
+    background: hsl(0, 0%, 90%);
+    transform: scale(1.1);
+    transition: .3s;
+}
+
+.rad-input:checked+.rad-design::before {
+    transform: scale(0);
+}
+
+.rad-text {
+    color: hsl(0, 0%, 75%);
+    margin-left: 14px;
+    font-size: 16px;
+    transition: .3s;
+    font-weight: 900;
+}
+
+.rad-input:checked~.rad-text {
+    color: hsl(0, 0%, 100%);
+}
+
