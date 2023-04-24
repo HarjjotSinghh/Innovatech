@@ -2,13 +2,11 @@ let fake_space = String.fromCodePoint(0x00002800);
 let test_questions = new Object();
 test_questions = {  
     "What is your budget?": [">10,000", "10,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000+"],
-    "What is your age group?": ["13-18", "18-30", "30-60", "60+"],
     "What is your screentime?": ["<4hrs", "4-8hrs", "8-12hrs", "12+hrs"],
     "Do you care about how your phone looks?": ["Yes", "No"],
     "How often do use your phone's camera?": [`Not${fake_space}that${fake_space}much`, "Sometimes", "Frequently", `All${fake_space}the${fake_space}time`],
     "What screen size do you prefer?": ["<6inches", "6-6.4inches", "6.4+inches"],
     "How much storage is sufficient for you?": ["32GB", "64GB", "128GB", "256GB", "512GB+"],
-    "What do you typically do on your smartphone on daily basis?": [`Messaging${fake_space}and${fake_space}Callin`, "Gaming", "Photography", "Videography"],
     "How much RAM is sufficient according to your needs?": ["2GB", "4GB", "6GB", "8GB+"]
 };
 

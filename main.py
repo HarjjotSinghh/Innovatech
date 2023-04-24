@@ -40,13 +40,11 @@ amazon = AmazonApi(config["AMAZON_API_ACCESS_KEY"], config["AMAZON_API_SECRET_AC
 fake_space = chr(0x00002800)
 test_questions = {  
         "What is your budget?": [">10,000", "10,000-20,000", "20,000-30,000", "30,000-40,000", "40,000-70,000", "70,000+"],
-        "What is your age group?": ["13-18", "18-30", "30-60", "60+"],
         "What is your screentime?": ["<4hrs", "4-8hrs", "8-12hrs", "12+hrs"],
         "Do you care about how your phone looks?": ["Yes", "No"],
         "How often do use your phone's camera?": [f"Not{fake_space}that{fake_space}much", "Sometimes", "Frequently", f"All{fake_space}the{fake_space}time"],
         "What screen size do you prefer?": ["<6inches", "6-6.4inches", "6.4+inches"],
         "How much storage is sufficient for you?": ["32GB", "64GB", "128GB", "256GB", "512GB+"],
-        "What do you typically do on your smartphone on daily basis?": [f"Messaging{fake_space}and{fake_space}Calling", "Gaming", "Photography", "Videography"],
         "How much RAM is sufficient according to your needs?": ["2GB", "4GB", "6GB", "8GB+"]
     }
 user_data = {}
@@ -171,18 +169,23 @@ async def get_smartphone_recommendation(user_data : dict):
                 best_smartphones.append(i)
     
     best_smartphones_names = [x["modelname"] for x in best_smartphones]
+    if not len(best_smartphones) >= 1:
+        best_smartphone_ = None
     try:
         best_smartphone_ = [sorted(best_smartphones, key=lambda x: x["price"])][0][0]
     except IndexError:
         best_smartphone_ = None
     try:
-        other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:4]
+        if len(best_smartphones) >= 5:
+            other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:5]
+        elif len(best_smartphones) < 5:
+            other_best_smartphones = None
     except IndexError:
         other_best_smartphones = None
     RAM=ram_gt
     Storage=rom_gt
     
-    return [best_smartphone_, other_best_smartphones,RAM,Storage]
+    return [best_smartphone_, other_best_smartphones, RAM, Storage]
 
 
 async def fetch(session, url, headers = None):
