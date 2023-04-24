@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+  <head>
+    <link rel="stylesheet" href="{{ url_for('static', filename='mobihunt.css') }}">
+    <meta charset="utf-8">
+    <title>MOBIHUNT</title>
+  </head>
+  <body>
+      
+  <img class= "logo" src="{{ url_for('static', filename='images/logo.png') }}">
+    <br>
+  <div class= "container">
+  <a href="http://localhost:6969/get_started">
+    <img class= "started" src="{{ url_for('static', filename='images/started.png') }}">
+  </a>
+
+  <table class="main">
+  <tr>
+    <td>
+      <a href="http://localhost:6969/tech_news">
+      <img class= "news" src="{{ url_for('static', filename='images/Tech news.png') }}"></td>
+      </a>
+  </tr>
+  <tr>
+    <td class="sec">
+      <a href="">
+        <img class="Contact" src="{{ url_for('static', filename='images/contact us.png') }}">
+      </a>
+      <a href="">
+        <img class="new" src="{{ url_for('static', filename='images/New.png') }}"></td>
+      </a>
+  </tr>
+  </table>
+  </div>
+
+  </body>
+</html>

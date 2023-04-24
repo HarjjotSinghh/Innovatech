@@ -54,49 +54,6 @@ user_data = {}
 
 async def get_smartphone_recommendation(user_data : dict):
 
-    # df = pd.DataFrame(data)
-
-    # features = df[["battery", "display_size", "main_camera", "internal_memory"]]
-    # target = df["modelname"]
-    # features_train, features_test, target_train, target_test = train_test_split(features, target, test_size=0.2)
-
-    # clf = DecisionTreeClassifier()
-    # clf.fit(features_train, target_train)
-    # accuracy = clf.score(features_test, target_test)
-    # prediction = clf.predict([[
-    #     battery,
-    #     user_data["What screen size do you prefer?"],
-    #     main_camera,
-    #     user_data["How much RAM is sufficient according to your needs?"],
-    # ]])
-
-
-    # required_properties = [
-    #     "battery",
-    #     "body_build",
-    #     "colors", 
-    #     "display_size", 
-    #     "main_camera", 
-    #     "internal_memory", 
-    #     "modelname",
-    #     "price",
-    #     "gpu",
-    #     "cpu"
-    # ]
-    # battery = ""
-    # requirements = {
-    #     "battery",
-    #     "body_build",
-    #     "colors", 
-    #     "display_size", 
-    #     "main_camera", 
-    #     "internal_memory", 
-    #     "modelname",
-    #     "price",
-    #     "gpu",
-    #     "cpu"
-    # }
-
     smartphone_recommendations = []
 
     battery_gt = 0
@@ -197,34 +154,12 @@ async def get_smartphone_recommendation(user_data : dict):
         ram_gt = 8
         ram_lt = 50
 
-    # print(ram_gt, ram_lt, rom_gt, rom_lt)
-    
-    # my_function = """
-    #     function() {
-    #         for (var i = 0; i < this.internall_memory.length; i++) {
-    #             var obj = this.internall_memory[i];
-    #             if (obj.Storage == {rom} && obj.RAM == {ram}) {
-    #                 return true;
-    #             }
-    #         }
-    #         return false;
-    #     }
-    # """.format(rom=rom_gt, ram=ram_gt)
 
     filter = {
         "battery": {"$gt": battery_gt, "$lt": battery_lt},
         "price": {"$gt": price_gt, "$lt": price_lt},
         "main_camera": {"$gt": main_camera_gt, "$lt": main_camera_lt},
         "display_size": {"$gt": display_size_gt, "$lt": display_size_lt},
-        # "internall_memory": { "$elemMatch": { 
-        #                                     "Storage": {"$gt": rom_gt, "$lt": rom_lt},
-        #                                     "RAM": {"$gt": ram_gt, "$lt": rom_lt} 
-        #                                     }
-        #                     }
-        # "internall_memory": { 
-        #                         "Storage": {"$gt": rom_gt, "$lt": rom_lt},
-        #                         "RAM": {"$gt": ram_gt, "$lt": rom_lt} 
-        #                     }
     }
 
     required_data = await (db["Smartphones"].find(filter)).to_list(length=None)
@@ -241,7 +176,7 @@ async def get_smartphone_recommendation(user_data : dict):
     except IndexError:
         best_smartphone_ = None
     try:
-        other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:6]
+        other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:4]
     except IndexError:
         other_best_smartphones = None
     RAM=ram_gt
@@ -266,232 +201,8 @@ async def get_data(length = None):
     return data
 
 
-@app.get("/")
+@app.get("/get_started")
 async def welcome():
-
-    """
-    Extracted database into JSON file from the API DeviceSpecs
-    """
-
-    # data : dict = {}
-    # url = "https://mobile-phone-specs-database.p.rapidapi.com/gsm/get-models-by-brandname/Samsung"
-    # headers = {
-    #     "X-RapidAPI-Key": config["RAPID_API_KEY"],
-    #     "X-RapidAPI-Host": "mobile-phone-specs-database.p.rapidapi.com"
-    # }
-    # page_no = 1
-    # for i in range(1, 76):
-    #     url = f"https://api.device-specs.io/api/smartphones?pagination[page]={i}&pagination[pageSize]=35&populate=*"
-    #     headers = {
-    #         "Authorization": f"Bearer {config['DEVICE_SPECS_API_TOKEN']}"
-    #     }
-    #     response = await get_url(url=url, headers=headers)
-    #     page_no += 1
-    #     response = json.loads(response)
-    #     with open("smartphones_data.json", "a") as f:
-    #         json.dump(response, f, indent=4)
-    # data.update(response)
-
-    """
-    Inserted data to the database
-    """
-
-    # with open("smartphones_data.json", "r") as f:
-    #     data = json.load(f)
-    # merged_data : dict = {}
-    # for jsonobj in data:
-    #     merged_data.update(jsonobj)
-    # with open("smartphones_data2.json", "w") as f:
-    #     json.dump(modified_data, f, indent=4)
-    # return text("Success")
-
-    # with open("smartphones_data.json") as f:
-    #     file_data = json.load(f)
-    #     async with await db_client.start_session() as s:
-    #         for jsonobj in file_data:
-    #             await db.get_collection("Smartphones").insert_one(jsonobj, session=s)
-    #     return text("Success")
-
-    """
-    Extracted Smartphones Names
-    """
-
-    # data = await get_data(74)
-    # data_ = []
-    
-    # for i in range(75):
-    #     for j in data[i-1]["data"]:
-    #         data_.append(j["name"])
-    
-    # smartphones_names: dict = {}
-
-    # for name in data_:
-    #     smartphones_names.update({name: ""})
-
-    # with open("./innovatech/smartphones_names.json", "w") as f:
-    #     json.dump(data_, f, indent=4)
-
-    """
-    Removed duplicates and removed preowned phones
-    """
-
-    # smartphones_names : list = json.load(open("./innovatech/smartphones_names.json", "r"))
-    
-    # for i in list(smartphones_names):
-    #     if "PreOwned" in i:
-    #         smartphones_names.remove(i)
-
-    # smartphones_names = [i for n, i in enumerate(smartphones_names) if i not in smartphones_names[:n]]
-
-    # with open("./innovatech/smartphones_names.json", "w") as f:
-    #     json.dump(smartphones_names, f, indent=4)
-
-    
-    # battery_sizes = []
-
-    # for name in smartphones_names[0:20]:
-    #     url = f"https://www.gsmarena.com/{name.lower().replace(' ', '_')}-reviews.php3"
-
-    #     response = await get_url(url)
-    #     soup = BeautifulSoup(response, 'html.parser')
-    #     try:
-    #         battery_elem = soup.find('td', string='Battery').find_next_sibling('td')
-    #         battery_text = battery_elem.get_text(strip=True)
-
-    #         battery_size = int(battery_text.split()[0])
-    #         battery_sizes.append(battery_size)
-    #     except:
-    #         battery_sizes.append(None)
-
-    # data = await get_url(url="https://api-mobilespecs.azharimm.dev/v2/apple_iphone_12_pro_max-10237", headers=None)
-
-    # data = []
-
-    """
-    Trying to scrape data from gsmarena
-    """
-
-    # for name in smartphones_names[0:10]:
-
-    #     name_url = name.replace(' ', '-')
-    #     url = f'https://www.gsmarena.com/res.php3?sSearch={name_url}&idMaker=0'
-    #     response = requests.get(url)
-    #     soup = BeautifulSoup(response.content, 'html.parser')
-    #     search_result = soup.find('div', class_='makers').find('a')
-
-    #     if search_result:
-    #         link = 'https://www.gsmarena.com/' + search_result['href']
-    #         data.append(f'{name}: {link}')
-    #     else:
-    #         data.append(f'{name}: Not found')
-
-    """
-    Removed discontinued phones from database
-    """
-
-    # path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
-    # dir_list = sorted(os.listdir(path))
-    # files_to_be_removed = []
-    # data_ = {}
-    # for file in dir_list:
-    #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
-    #         data_ = json.load(f)
-    #         data.append(data_)
-    #         # print(data_["launch_status"])
-    #         if not "available" in data_["launch_status"].lower():
-    #             files_to_be_removed.append(file)
-                
-    # for file in files_to_be_removed:
-    #     os.remove(f"{path}\{file}")
-    #     print(f"Removed {file}")
-
-    """
-    Entering finalised data into mongoDB
-    """
-
-    # path = "C:\Everything Else\Innovatech\Innovatech\smartphone-specs-scraper-main\scraped_data"
-    # dir_list = sorted(os.listdir(path))
-    # # files_to_be_removed = []
-
-    # for file in dir_list:
-    #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}") as f:
-
-    #         file_data = json.load(f)
-            # main_camera = file_data["main_camera"]
-            # match1 = re.search(r'(\d+)\s*MP', main_camera)
-            # display_size = file_data["display_size"]
-            # match2 = re.search(r'(\d+(\.\d+)?)', display_size)
-
-            # if match2:
-            #     number1 = float(match2.group(1))
-            #     file_data["display_size"] = number1
-            #     print(number1)
-            #     with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
-            #         json.dump(file_data, f_, indent=4)
-            #         print(file)
-            # else:
-            #     print("No match", file)
-
-            # async with await db_client.start_session() as s:
-            #     await db.get_collection("Smartphones").insert_one(file_data, session=s)
-            #     print(f"Inserted {file}")                 
-           
-            # try:
-            #     if isinstance(file_data["price"], int) and file_data["price"] > 100000:
-            #         file_data["price"] = int(file_data["price"]) / 100
-            #     elif isinstance(file_data["price"], str):
-            #         if file_data["price"].isnumeric():
-            #             if int(file_data["price"]) > 100000:
-            #                 file_data["price"] = int(file_data["price"]) / 100
-            #         else:
-            #             print(file)
-            # except ValueError:
-            #     continue
-
-            # with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
-            #         json.dump(file_data, f_, indent=4)
-            #         print(file)
-            
-            # internal_memory = file_data["internal_memory"]
-            # internal_memory_list = []
-            # for substring in internal_memory.split(", "):
-            #     substring = substring.strip()
-            #     storage, ram = substring.split(" ")[0:2]
-            #     storage = int(storage[:-2])
-            #     ram = int(ram[:-2])
-            #     internal_memory_list.append({"Storage": storage, "RAM": ram})
-            # file_data["internall_memory"] = internal_memory_list
-            # with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
-            #     json.dump(file_data, f_, indent=4)
-
-    #         data.append(file)
-    #         if "$" in file_data["price"]:
-    #             match = re.search(r'\d+\.\d+', file_data["price"])
-    #             if match:
-    #                 price = match.group()
-    #                 file_data["price"] = str(int(float(price) * 82))
-    #                 print(price)
-    #                 with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
-    #                     json.dump(file_data, f_)
-    #             if not match:
-    #                 print(file)
-    #                 files_to_be_removed.append(file)
-
-    #         elif "about" and not "inr" in file_data["price"].lower():
-    #             match = re.search(r'\d+', file_data["price"])
-    #             if match:
-    #                 price = match.group()
-    #                 file_data["price"] = str(int(float(price) * 91))
-    #                 print(price)
-    #                 with open(f"./Innovatech/smartphone-specs-scraper-main/scraped_data/{file}", "w") as f_:
-    #                     json.dump(file_data, f_)
-    #             if not match:
-    #                 print(file)
-    #                 files_to_be_removed.append(file)            
-    
-    # for file in files_to_be_removed:
-    #     os.remove(f"{path}\{file}")
-    #     print(f"Removed {file}")
     with app.app_context():
         return render_template("welcome.html", questions=test_questions)
 
@@ -511,6 +222,9 @@ async def result():
 async def tech_news():
     return render_template("Tech News.html")
 
+@app.route("/")
+async def home():
+    return render_template("mobihunt.html")
 
 if __name__ == '__main__':
     
