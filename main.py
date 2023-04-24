@@ -235,12 +235,11 @@ async def get_smartphone_recommendation(user_data : dict):
             if j["Storage"] <= rom_lt and j["Storage"] >= rom_gt and j["RAM"] <= ram_lt and j["RAM"] >= ram_gt:
                 best_smartphones.append(i)
     
-    print([x["modelname"] for x in best_smartphones])
-
-    smartphone_recommendations = best_smartphones
+    best_smartphones_names = [x["modelname"] for x in best_smartphones]
+    best_smartphone_ = [sorted(best_smartphones, key=lambda x: x["price"])][0][0]
+    other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:6]
     
-    
-    return smartphone_recommendations
+    return [best_smartphone_, other_best_smartphones]
 
 
 async def fetch(session, url, headers = None):
