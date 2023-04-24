@@ -3,15 +3,24 @@
   margin: 0;
   padding: 0;
 }
+
+body{
+  background: linear-gradient(45deg, #cccbcb , #6b6b6b, #585858);
+  background-size: 400% 400%;
+  animation: gradient 15s ease infinite;
+}
+
 header {
-  background-color: #333;
   color: #fff;
   height: 80px;
 }
-h1 {
+
+h1.tech-news-heading {
   font-size: 32px;
-  font-family: Berlin Sans FB Bold;
   text-align: center;
+  margin-left: -1000px;
+  font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+
 }
 main {
   display: flex;
@@ -35,7 +44,7 @@ main {
   box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2);
   }
 .article:hover {
-  background: linear-gradient(to bottom right, #dddddd, pink);
+  background: linear-gradient(to bottom right, #dddddd, rgb(185, 185, 185));
 }
 .article:last-child {
   margin-bottom: 0;
@@ -71,6 +80,20 @@ a {
   text-align: center;
   text-decoration: none;
 }
+
+
+@keyframes gradient {
+  0% {
+      background-position: 0% 50%;
+  }
+  50% {
+      background-position: 100% 50%;
+  }
+  100% {
+      background-position: 0% 50%;
+  }
+}
+
 a:hover {
   transform: translateY(-5px);
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
@@ -93,7 +116,7 @@ a:hover {
   box-shadow: 0px 5px 10px rgba(0, 0, 0, 0.2);
 }
 .article-description {
-  background-color: red;
+  background-color: rgb(133, 133, 133);
   border-radius: 20px;
   padding: 10px;
   margin: 10px;
