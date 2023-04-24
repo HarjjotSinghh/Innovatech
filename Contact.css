@@ -1,0 +1,49 @@
+body{
+    background: linear-gradient(-45deg, #e4e4e4 , #8a8989, #8a8989);
+    background-size: 400% 400%;
+    animation: gradient 15s ease infinite;
+  }
+
+img.logo{
+    height: 60px;
+    width:  330px;
+    margin-left: 50px;
+}
+
+img.main{
+    height:900px;
+    width:1475px;
+    margin-left: -80px;
+}
+
+h2.info{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+}
+ 
+h1{
+    font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    color: white;
+    margin-left: 50px;
+}                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                  
+
+.info{
+    margin-left: 80px;
+}
+
+html, body {
+    width: 98%;
+    height: 98%;
+  }
+  
+  @keyframes gradient {
+      0% {
+          background-position: 0% 50%;
+      }
+      50% {
+          background-position: 100% 50%;
+      }
+      100% {
+          background-position: 0% 50%;
+      }
+  }
