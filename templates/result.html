@@ -18,7 +18,18 @@
             </h1>
             <div class="main_result">
                 <h1 class="subheading"> {{data[0]["modelname"].__str__().capitalize()}}</h1>
+                <ul class"specs">
+                    <li class ="price">{{data[0]["Price"]}} INR </li>
+                    <li class ="battery_size">{{data[0]["battery"]}}</li>
+                    <li class="display_size">{{data[0]["display_size"]}} inches</li>
+                    <li class="">{{data[0]["display_size"]}} inches</li>
+                    <li class ="main_camera">{{data[0]["main_camera"]}}</li>
+                    <li class ="RAM">{{data[2]}} GB </li>
+                    <li class ="Storage">{{data[3]}} GB </li> 
+                </ul>
+
             </div>
+
             {% if data[1] %}
                 <div class="other_results">
 
