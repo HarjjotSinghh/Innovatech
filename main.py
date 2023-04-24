@@ -236,8 +236,14 @@ async def get_smartphone_recommendation(user_data : dict):
                 best_smartphones.append(i)
     
     best_smartphones_names = [x["modelname"] for x in best_smartphones]
-    best_smartphone_ = [sorted(best_smartphones, key=lambda x: x["price"])][0][0]
-    other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:6]
+    try:
+        best_smartphone_ = [sorted(best_smartphones, key=lambda x: x["price"])][0][0]
+    except IndexError:
+        best_smartphone_ = None
+    try:
+        other_best_smartphones =  [sorted(best_smartphones, key=lambda x: x["price"])][0][1:6]
+    except IndexError:
+        other_best_smartphones = None
     RAM=ram_gt
     Storage=rom_gt
     
