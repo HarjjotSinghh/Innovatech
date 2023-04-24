@@ -1,42 +1,67 @@
-const apiUrl = "https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=900917e1c843409288a40c7c9330fcb9";
+const colors = ['red', 'yellow', 'green' , 'indigo' , 'violet' , 'pink'];
+let currentColor = 0;
+const background = document.querySelector('body');
+background.addEventListener('mouseover', () => {
+  background.style.background = `linear-gradient(to right, gray, ${colors[currentColor]})`;
+  currentColor = (currentColor + 1) % colors.length;
+});
+background.addEventListener('mouseout', () => {
+  background.style.background = 'gray';
+});
 const articlesContainer = document.querySelector(".articles");
 const browseMoreButton = document.querySelector(".browse-more");
-let currentPage = 1;
+let currentPage = 1 ;
 let pageSize = 5;
+const createArticleElement = (title, date, excerpt, imageUrl, articleUrl) => {
+  const articleDiv = document.createElement("div");
+  articleDiv.classList.add("article");
+
+  const thumbnailDiv = document.createElement("div");
+  thumbnailDiv.classList.add("thumbnail");
+
+  const thumbnailImg = document.createElement("img");
+  thumbnailImg.src = imageUrl;
+  thumbnailImg.alt = title;
+  thumbnailDiv.appendChild(thumbnailImg);
+  articleDiv.appendChild(thumbnailDiv);
+
+  const contentDiv = document.createElement("div");
+  contentDiv.classList.add("content");
+
+  const headline = document.createElement("h2");
+  headline.textContent = title;
+  contentDiv.appendChild(headline);
+
+  const dateElement = document.createElement("p");
+  dateElement.classList.add("article-date");
+  dateElement.textContent = new Date(date).toLocaleDateString();
+  contentDiv.appendChild(dateElement);
+
+  const descriptionWrapper = document.createElement("div");
+  descriptionWrapper.classList.add("description-wrapper");
+
+  const description = document.createElement("p");
+  description.textContent = excerpt;
+  descriptionWrapper.appendChild(description);
+  contentDiv.appendChild(descriptionWrapper);
+
+  const readMoreLink = document.createElement("a");
+  readMoreLink.href = articleUrl;
+  readMoreLink.textContent = "Read More";
+  readMoreLink.classList.add("read-more");
+  contentDiv.appendChild(readMoreLink);
+  articleDiv.appendChild(contentDiv);
+  articlesContainer.appendChild(articleDiv);
+};
 async function fetchNews(page) {
   try {
-    const response = await fetch(`${apiUrl}&page=${page}&pageSize=${pageSize}`);
+    const apiUrl = `https://newsapi.org/v2/top-headlines?country=in&category=technology&apiKey=900917e1c843409288a40c7c9330fcb9&page=${page}&pageSize=${pageSize}`;
+    const response = await fetch(apiUrl);
     const data = await response.json();
-    articlesContainer.innerHTML = "";
-    for (let article of data.articles) {
-      const articleDiv = document.createElement("div");
-      articleDiv.classList.add("article");
-      const thumbnailDiv = document.createElement("div");
-      thumbnailDiv.classList.add("thumbnail");
-      const thumbnailImg = document.createElement("img");
-      thumbnailImg.src = article.urlToImage;
-      thumbnailImg.alt = article.title;
-      thumbnailDiv.appendChild(thumbnailImg);
-      articleDiv.appendChild(thumbnailDiv);
-      const contentDiv = document.createElement("div");
-      contentDiv.classList.add("content");
-      const headline = document.createElement("h2");
-      headline.textContent = article.title;
-      contentDiv.appendChild(headline);
-      const descriptionWrapper = document.createElement("div");
-      descriptionWrapper.classList.add("description-wrapper"); 
-      const description = document.createElement("p");
-      description.textContent = article.description;
-      descriptionWrapper.appendChild(description);
-      contentDiv.appendChild(descriptionWrapper);
-      const readMoreLink = document.createElement("a");
-      readMoreLink.href = article.url;
-      readMoreLink.textContent = "Read More";
-      readMoreLink.classList.add("read-more");
-      contentDiv.appendChild(readMoreLink);
-      articleDiv.appendChild(contentDiv);
-      articlesContainer.appendChild(articleDiv);
-    }
+    data.articles.forEach((article) => {
+      const { title, publishedAt, description, urlToImage, url } = article;
+      createArticleElement(title, publishedAt, description, urlToImage, url);
+    });
     const totalResults = data.totalResults;
     const totalPages = Math.ceil(totalResults / pageSize);
     if (currentPage < totalPages) {
