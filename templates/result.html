@@ -11,8 +11,41 @@
     <script type="text/javascript" src="http://ajax.googleapis.com/ajax/libs/jquery/1.5/jquery.min.js"></script>
 </head>
 <body>
-    <div id="results">
-        {{user_data}}
-    </div>
+    {% if data[0] %}
+        <div id="results">
+            <h1 class = "heading">
+               The best smartphone according to your needs is 
+            </h1>
+            <div class="main_result">
+                <h1 class="subheading"> {{data[0]["modelname"].__str__().capitalize()}}</h1>
+                <ul class"specs">
+                    <li class ="price">{{data[0]["Price"]}} INR </li>
+                    <li class ="battery_size">{{data[0]["battery"]}}</li>
+                    <li class="display_size">{{data[0]["display_size"]}} inches</li>
+                    <li class="">{{data[0]["display_size"]}} inches</li>
+                    <li class ="main_camera">{{data[0]["main_camera"]}}</li>
+                    <li class ="RAM">{{data[2]}} GB </li>
+                    <li class ="Storage">{{data[3]}} GB </li> 
+                </ul>
+
+            </div>
+
+            {% if data[1] %}
+                <div class="other_results">
+
+                </div>
+            {% endif %}
+            
+
+        </div>
+    {% else %}
+        <div class="fail">
+            <h1 class="heading">
+                No smartphone found according to your needs. 
+            </h1>
+        </div>
+
+    {% endif %}
+
 </body>
 </html>
