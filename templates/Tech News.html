@@ -3,17 +3,19 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>MOBIHUNT - TECH NEWS</title>
-    <link rel="stylesheet" href="{{ url_for('static', filename='Tech News.css') }}">
+    <title>Tech News</title>
+    <link rel="stylesheet" href="Tech News.css"/>
   </head>
   <body>
     <header>
-      <h1>TECH NEWS</h1>
+      <br><br>
+      <h1 class="tech-news-heading">TECH NEWS</h1>
     </header>
     <main>
+
       <div class="articles"></div>
       <button class="browse-more">BROWSE MORE</button>
     </main>
-    <script type="module" src="{{url_for('static', filename='Tech News.js')}}"></script>
+    <script src="Tech News.js"></script>
   </body>
 </html>
