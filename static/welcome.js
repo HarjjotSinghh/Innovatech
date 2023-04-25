@@ -130,6 +130,8 @@ var selectedOptions = new Object();
                     });
                     // console.log(selectedOptions);
                     window.location = "http://localhost:6969/result";
+                    document.getElementById("nextQuestion").style.display = "none";
+                    document.getElementById("spinner").style.display = "block";
                     
                 };
                 

@@ -22,7 +22,7 @@
                 <div class="main_specs">
                     <h1 class="subheading">{{data[0]["modelname"].__str__().title()}}⠀⠀⠀⠀⠀</h1>
                     <ul class="specs">
-                        <li class ="price"><span class="light">Price</span>: {{round(data[0]["price"])}} INR ⠀⠀⠀⠀⠀</li>
+                        <li class ="price"><span class="light">Price</span>: {{data[0]["price"].__int__()}} INR ⠀⠀⠀⠀⠀</li>
                         <li class ="battery_size"><span class="BT">Battery Capacity</span>: {{data[0]["battery"]}} mah ⠀⠀⠀⠀⠀</li>
                         <li class="display_size"><span class="DS"> Display Size</span>: {{data[0]["display_size"]}} inches⠀⠀⠀⠀⠀</li>
                         <li class ="main_camera"><span class="Cam">Camera</span>: {{data[0]["main_camera"]}} MP⠀⠀⠀⠀⠀</li>
@@ -34,7 +34,7 @@
 
             {% else %}
                 <h1 class="heading">
-                    MobiHunt could not hunt your phone down :(
+                    MobiHunt could not hunt your phone :(
                 </h1>
             {% endif %}
             <br>
@@ -75,7 +75,5 @@
                 </div>
                 </div>
             {%endif%}
-
-              
 </body>
 </html>

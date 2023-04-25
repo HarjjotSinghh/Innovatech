@@ -21,7 +21,7 @@ body {
 }
 
 .nextQuestion {
-  background-image: linear-gradient(270deg, #455EB5 9.16%, #5643CC 43.89%, #673FD7 64.72%);
+  background-image: linear-gradient(270deg, rgb(64, 72, 134), #7077d1);
   border-radius: 100px;
   border-style: none;
   box-sizing: border-box;
@@ -40,6 +40,29 @@ body {
   -webkit-user-select: none;
   touch-action: manipulation;
 }
+
+.spinner-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}  
+
+.spinner {
+    display: none;
+    border: 5px solid #f3f3f3;
+    border-top: 5px solid #213bce;
+    border-radius: 50%;
+    width: 30px;
+    height: 30px;
+    animation: spin 1s linear infinite;
+}
+  
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
+}
+  
 
 .nextQuestion:hover {
   box-shadow: rgba(80, 63, 205, 0.5) 0 2px 40px;
@@ -136,4 +159,39 @@ body {
     100% {
         background-position: 0% 50%;
     }
+}
+
+.wave {
+position: fixed;
+bottom: 100%;
+animation-name: waveAnimation;
+animation-duration: 2s;
+animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+.wave2 {
+transform: rotate(180deg);
+position: fixed;
+bottom: 100%;
+animation-name: waveAnimation2;
+animation-duration: 2s;
+animation-timing-function: cubic-bezier(0.445, 0.05, 0.55, 0.95);
+}
+
+@keyframes waveAnimation {
+0% {
+    bottom: -100%
+}
+100% {
+    bottom: 150%;
+}
+}
+
+@keyframes waveAnimation2 {
+0% {
+    bottom: -150%
+}
+100% {
+    bottom: 100%;
+}
 }

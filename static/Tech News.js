@@ -1,13 +1,3 @@
-// const colors = ['red', 'yellow', 'green' , 'indigo' , 'violet' , 'pink'];
-// let currentColor = 0;
-// const background = document.querySelector('body');
-// background.addEventListener('mouseover', () => {
-//   background.style.background = `linear-gradient(to right, gray, ${colors[currentColor]})`;
-//   currentColor = (currentColor + 1) % colors.length;
-// });
-// background.addEventListener('mouseout', () => {
-//   background.style.background = 'gray';
-// });
 const articlesContainer = document.querySelector(".articles");
 const browseMoreButton = document.querySelector(".browse-more");
 let currentPage = 1 ;

@@ -86,69 +86,69 @@ async def get_smartphone_recommendation(user_data : dict):
         price_gt = 0
         price_lt = 700000
 
-    if list(user_data.values())[2] == "<4hrs":
+    if list(user_data.values())[1] == "<4hrs":
         battery_gt = 2000
         battery_lt = 5000
-    elif list(user_data.values())[2] == "4-8hrs":
+    elif list(user_data.values())[1] == "4-8hrs":
         battery_gt = 2000
         battery_lt = 5500
-    elif list(user_data.values())[2] == "8-12hrs":
+    elif list(user_data.values())[1] == "8-12hrs":
         battery_gt = 3000
         battery_lt = 6000
-    elif list(user_data.values())[2] == "12+hrs":
+    elif list(user_data.values())[1] == "12+hrs":
         battery_gt = 4000
         battery_lt = 10000
 
-    if list(user_data.values())[4] == f"Not{fake_space}that{fake_space}much":
+    if list(user_data.values())[3] == f"Not{fake_space}that{fake_space}much":
         main_camera_gt = 2
         main_camera_lt = 33
-    elif list(user_data.values())[4] == "Sometimes":
+    elif list(user_data.values())[3] == "Sometimes":
         main_camera_gt = 5
         main_camera_lt = 65
-    elif list(user_data.values())[4] == "Frequently":
+    elif list(user_data.values())[3] == "Frequently":
         main_camera_gt = 10
         main_camera_lt = 111
-    elif list(user_data.values())[4] == f"All{fake_space}the{fake_space}time":
+    elif list(user_data.values())[3] == f"All{fake_space}the{fake_space}time":
         main_camera_gt = 40
         main_camera_lt = 200
     
-    if list(user_data.values())[5] == "<6inches":
+    if list(user_data.values())[4] == "<6inches":
         display_size_gt = 0.0
         display_size_lt = 6.0
-    elif list(user_data.values())[5] == "6-6.4inches":
+    elif list(user_data.values())[4] == "6-6.4inches":
         display_size_gt = 6.0
         display_size_lt = 6.4
-    elif list(user_data.values())[5] == "6.4+inches":
+    elif list(user_data.values())[4] == "6.4+inches":
         display_size_gt = 6.4
         display_size_lt = 20.0
     
 
-    if list(user_data.values())[6] == "64GB":
+    if list(user_data.values())[5] == "64GB":
         rom_gt = 64
         rom_lt = 64
-    elif list(user_data.values())[6] == "32GB":
+    elif list(user_data.values())[5] == "32GB":
         rom_gt = 32
         rom_lt = 32
-    elif list(user_data.values())[6] == "128GB":
+    elif list(user_data.values())[5] == "128GB":
         rom_gt = 128
         rom_lt = 128
-    elif list(user_data.values())[6] == "256GB":
+    elif list(user_data.values())[5] == "256GB":
         rom_gt = 256
         rom_lt = 256
-    elif list(user_data.values())[6] == "512GB+":
+    elif list(user_data.values())[5] == "512GB+":
         rom_gt = 512
         rom_lt = 4000
     
-    if list(user_data.values())[8] == "4GB":
+    if list(user_data.values())[6] == "4GB":
         ram_gt = 4
         ram_lt = 4
-    elif list(user_data.values())[8] == "6GB":
+    elif list(user_data.values())[6] == "6GB":
         ram_gt = 6
         ram_lt = 6
-    elif list(user_data.values())[8] == "2GB":
+    elif list(user_data.values())[6] == "2GB":
         ram_gt = 2
         ram_lt = 2
-    elif list(user_data.values())[8] == "8GB+":
+    elif list(user_data.values())[6] == "8GB+":
         ram_gt = 8
         ram_lt = 50
 
@@ -229,9 +229,13 @@ async def tech_news():
 async def home():
     return render_template("mobihunt.html")
 
+@app.route("/contact_us")
+async def contact_us():
+    return render_template("Contact.html")
+
 if __name__ == '__main__':
     
-    app.run(host="localhost", port=6969)
+    app.run(host="localhost", port=6969, debug=True)
     loop = asyncio.get_event_loop()
     try:
         loop.run_until_complete(welcome())

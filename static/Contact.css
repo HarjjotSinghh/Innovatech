@@ -1,7 +1,8 @@
 body{
-    background: linear-gradient(-45deg, #e4e4e4 , #8a8989, #8a8989);
+    background: linear-gradient(-45deg, #3b3b3b , #222222, #181818);
     background-size: 400% 400%;
     animation: gradient 15s ease infinite;
+    overflow-x: hidden;
   }
 
 img.logo{
